@@ -1,0 +1,109 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <!--<Style TargetType="{x:Type local:Pin}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate 
+                        TargetType="{x:Type local:Pin}"
+                        >
+                        
+                        <Thumb PreviewMouseDown="Thumb_PreviewMouseDown">
+                            <Thumb.Template>
+
+                                <ControlTemplate>
+                                    
+                                    <Ellipse Width="20" Height="20" Fill="Yellow"/>
+                                </ControlTemplate>
+                            </Thumb.Template>
+
+                        </Thumb>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
+
+
+        <DataTemplate x:Key="PinTemplate" DataType="{x:Type local:Pin}">
+            <Thumb PreviewMouseDown="Thumb_PreviewMouseDown">
+                <Thumb.Template>
+                    <ControlTemplate>
+                        <local:ConnectorItem PreviewMouseDown="ConnectorItem_PreviewMouseDown"
+                        Ancestor="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}}"
+                        Hotspot="{Binding Location, Mode=OneWayToSource}"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                            Visibility="Visible"
+                        >
+                            <Ellipse
+                            Stroke="Black"
+                            StrokeThickness="1"
+                            Fill="White"
+                                Width="20"
+                                Height="20"
+                            />
+                        </local:ConnectorItem>
+                    </ControlTemplate>
+                </Thumb.Template>
+
+            </Thumb>
+        </DataTemplate>
+
+
+
+        <DataTemplate DataType="{x:Type local:Node}">
+            <Thumb DragDelta="Thumb_DragDelta">
+                <Thumb.Template>
+                    <ControlTemplate>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Width="100"
+                                       Height="100"
+                                       Fill="Black"/>
+                            <ItemsControl ItemsSource="{Binding Pins}"
+                                          ItemTemplate="{StaticResource PinTemplate}"
+                                          >
+
+
+                            </ItemsControl>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+        </DataTemplate>
+    </Window.Resources>
+
+
+    <Grid>
+        <ItemsControl
+            ItemsSource="{Binding Nodes, UpdateSourceTrigger=PropertyChanged}"
+            PreviewMouseDown="ItemsControl_PreviewMouseDown"
+            
+            >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter
+                        Property="Canvas.Left"
+                        Value="{Binding X}"
+                        />
+                    <Setter
+                        Property="Canvas.Top"
+                        Value="{Binding Y}"
+                        />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+
+    </Grid>
+</Window>
